@@ -45,7 +45,7 @@
                     <dt class="text-sm font-medium text-gray-500">Status</dt>
                     <dd class="mt-1">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            @match($project->status)
+                            @switch($project->status)
                                 @case('planejamento')
                                     bg-blue-100 text-blue-800
                                     @break
@@ -60,7 +60,7 @@
                                     @break
                                 @default
                                     bg-gray-100 text-gray-800
-                            @endmatch
+                            @endswitch
                         ">
                             {{ $statusLabel }}
                         </span>
@@ -119,7 +119,7 @@
                             @endif
                             <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                                    @match($task->status)
+                                    @switch($task->status)
                                         @case('todo')
                                             bg-gray-100 text-gray-800
                                             @break
@@ -134,12 +134,12 @@
                                             @break
                                         @default
                                             bg-gray-100 text-gray-800
-                                    @endmatch
+                                    @endswitch
                                 ">
                                     {{ $task->statusLabel }}
                                 </span>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                                    @match($task->priority)
+                                    @switch($task->priority)
                                         @case('low')
                                             bg-gray-100 text-gray-800
                                             @break
@@ -151,7 +151,7 @@
                                             @break
                                         @default
                                             bg-gray-100 text-gray-800
-                                    @endmatch
+                                    @endswitch
                                 ">
                                     {{ $task->priorityLabel }}
                                 </span>

@@ -32,8 +32,16 @@ class ProjectList extends Component
             ->withCount('tasks')
             ->paginate(10);
 
+        $statusLabels = [
+            'planejamento' => 'Planejamento',
+            'em_andamento' => 'Em andamento',
+            'concluido' => 'Concluído',
+            'cancelado' => 'Cancelado',
+        ];
+
         return view('projects.index', [
             'projects' => $projects,
+            'statusLabels' => $statusLabels,
             'errors' => new \Illuminate\Support\ViewErrorBag([
                 'default' => $this->getErrorBag(),
             ]),

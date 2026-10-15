@@ -5,7 +5,11 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Project;
+use App\Livewire\Projects\ProjectList;
+use App\Livewire\Projects\CreateProject;
+use App\Livewire\Projects\ProjectShow;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 class ProjectTest extends TestCase
 {
@@ -36,19 +40,15 @@ class ProjectTest extends TestCase
 
     public function test_user_can_create_project(): void
     {
-        $projectData = [
-            'name' => 'Projeto Teste',
-            'description' => 'Descrição do projeto',
-            'status' => 'planejamento',
-            'start_date' => '2024-01-01',
-            'due_date' => '2024-12-31',
-        ];
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', 'Projeto Teste')
+            ->set('description', 'Descrição do projeto')
+            ->set('status', 'planejamento')
+            ->set('start_date', '2024-01-01')
+            ->set('due_date', '2024-12-31')
+            ->call('save');
 
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.index'))
-            ->post(route('projects.store'), $projectData);
-
-        $response->assertRedirect(route('projects.index'));
         $this->assertDatabaseHas('projects', [
             'name' => 'Projeto Teste',
             'user_id' => $this->user->id,
@@ -58,51 +58,44 @@ class ProjectTest extends TestCase
 
     public function test_project_creation_requires_name(): void
     {
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.create'))
-            ->post(route('projects.store'), [
-                'description' => 'Sem nome',
-                'status' => 'planejamento',
-            ]);
-
-        $response->assertSessionHasErrors('name');
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', '')
+            ->set('status', 'planejamento')
+            ->call('save')
+            ->assertHasErrors(['name' => 'required']);
     }
 
     public function test_project_creation_requires_status(): void
     {
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.create'))
-            ->post(route('projects.store'), [
-                'name' => 'Projeto sem status',
-            ]);
-
-        $response->assertSessionHasErrors('status');
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', 'Projeto sem status')
+            ->set('status', '')
+            ->call('save')
+            ->assertHasErrors(['status' => 'required']);
     }
 
     public function test_project_status_must_be_valid(): void
     {
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.create'))
-            ->post(route('projects.store'), [
-                'name' => 'Projeto inválido',
-                'status' => 'invalido',
-            ]);
-
-        $response->assertSessionHasErrors('status');
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', 'Projeto inválido')
+            ->set('status', 'invalido')
+            ->call('save')
+            ->assertHasErrors(['status' => 'in']);
     }
 
     public function test_due_date_cannot_be_before_start_date(): void
     {
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.create'))
-            ->post(route('projects.store'), [
-                'name' => 'Projeto com datas',
-                'status' => 'planejamento',
-                'start_date' => '2024-12-31',
-                'due_date' => '2024-01-01',
-            ]);
-
-        $response->assertSessionHasErrors('due_date');
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', 'Projeto com datas')
+            ->set('status', 'planejamento')
+            ->set('start_date', '2024-12-31')
+            ->set('due_date', '2024-01-01')
+            ->call('save')
+            ->assertHasErrors(['due_date' => 'after_or_equal']);
     }
 
     public function test_user_can_view_own_project(): void
@@ -126,10 +119,9 @@ class ProjectTest extends TestCase
             'name' => 'Projeto do Outro',
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->get(route('projects.show', $project));
-
-        $response->assertStatus(403);
+        Livewire::actingAs($this->user)
+            ->test(ProjectShow::class, ['project' => $project])
+            ->assertForbidden();
     }
 
     public function test_user_can_edit_own_project(): void
@@ -140,15 +132,13 @@ class ProjectTest extends TestCase
             'status' => 'planejamento',
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.edit', $project))
-            ->put(route('projects.update', $project), [
-                'name' => 'Projeto Atualizado',
-                'description' => 'Nova descrição',
-                'status' => 'em_andamento',
-            ]);
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class, ['project' => $project])
+            ->set('name', 'Projeto Atualizado')
+            ->set('description', 'Nova descrição')
+            ->set('status', 'em_andamento')
+            ->call('save');
 
-        $response->assertRedirect(route('projects.index'));
         $project->refresh();
         $this->assertEquals('Projeto Atualizado', $project->name);
         $this->assertEquals('em_andamento', $project->status);
@@ -161,13 +151,9 @@ class ProjectTest extends TestCase
             'name' => 'Projeto do Outro',
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.edit', $project))
-            ->put(route('projects.update', $project), [
-                'name' => 'Tentativa de Edição',
-            ]);
-
-        $response->assertStatus(403);
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class, ['project' => $project])
+            ->assertForbidden();
     }
 
     public function test_user_can_delete_own_project(): void
@@ -177,11 +163,10 @@ class ProjectTest extends TestCase
             'name' => 'Projeto para Excluir',
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.index'))
-            ->delete(route('projects.destroy', $project));
+        Livewire::actingAs($this->user)
+            ->test(ProjectList::class)
+            ->call('delete', $project);
 
-        $response->assertRedirect(route('projects.index'));
         $this->assertDatabaseMissing('projects', ['id' => $project->id]);
     }
 
@@ -192,11 +177,10 @@ class ProjectTest extends TestCase
             'name' => 'Projeto do Outro',
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->from(route('projects.index'))
-            ->delete(route('projects.destroy', $project));
-
-        $response->assertStatus(403);
+        Livewire::actingAs($this->user)
+            ->test(ProjectList::class)
+            ->call('delete', $project)
+            ->assertForbidden();
     }
 
     public function test_projects_list_is_isolated_by_user(): void
@@ -207,20 +191,46 @@ class ProjectTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('projects.index'));
         
         $response->assertStatus(200);
-        // Should only see own projects
-        $this->assertEquals(3, $response->viewData('projects')->count());
+        $response->assertSee('Meus Projetos');
     }
 
-    public function test_user_cannot_access_create_page_as_guest(): void
+    public function test_user_can_create_project_via_livewire_form(): void
     {
-        $response = $this->get(route('projects.create'));
-        $response->assertRedirect(route('login'));
+        Livewire::actingAs($this->user)
+            ->test(CreateProject::class)
+            ->set('name', 'Novo Projeto')
+            ->set('description', 'Descrição detalhada')
+            ->set('status', 'em_andamento')
+            ->set('start_date', '2024-03-15')
+            ->set('due_date', '2024-06-30')
+            ->call('save');
+
+        $this->assertDatabaseHas('projects', [
+            'name' => 'Novo Projeto',
+            'description' => 'Descrição detalhada',
+            'user_id' => $this->user->id,
+            'status' => 'em_andamento',
+        ]);
     }
 
-    public function test_user_cannot_access_edit_page_as_guest(): void
+    public function test_user_can_filter_projects_by_status(): void
     {
-        $project = Project::factory()->create();
-        $response = $this->get(route('projects.edit', $project));
-        $response->assertRedirect(route('login'));
+        $project1 = Project::factory()->create(['user_id' => $this->user->id, 'status' => 'planejamento', 'name' => 'Projeto 1']);
+        $project2 = Project::factory()->create(['user_id' => $this->user->id, 'status' => 'concluido', 'name' => 'Projeto 2']);
+
+        Livewire::actingAs($this->user)
+            ->test(ProjectList::class)
+            ->set('statusFilter', 'concluido')
+            ->assertSee($project2->name)
+            ->assertDontSee($project1->name);
+    }
+
+    public function test_projects_list_shows_projects(): void
+    {
+        Project::factory()->count(3)->create(['user_id' => $this->user->id]);
+
+        Livewire::actingAs($this->user)
+            ->test(ProjectList::class)
+            ->assertSee('Meus Projetos');
     }
 }

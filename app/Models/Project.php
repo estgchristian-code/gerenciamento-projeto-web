@@ -15,10 +15,12 @@ class Project extends Model
         'name',
         'description',
         'status',
+        'start_date',
         'due_date',
     ];
 
     protected $casts = [
+        'start_date' => 'date',
         'due_date' => 'date',
     ];
 

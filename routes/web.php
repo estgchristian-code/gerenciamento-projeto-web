@@ -36,9 +36,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/projects', ProjectList::class)->name('projects.index');
     Route::get('/projects/create', CreateProject::class)->name('projects.create');
-    Route::post('/projects', CreateProject::class)->name('projects.store');
     Route::get('/projects/{project}', ProjectShow::class)->name('projects.show');
     Route::get('/projects/{project}/edit', CreateProject::class)->name('projects.edit');
-    Route::put('/projects/{project}', CreateProject::class)->name('projects.update');
-    Route::delete('/projects/{project}', CreateProject::class)->name('projects.destroy');
 });

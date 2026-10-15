@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Projects;
 
-use App\Http\Requests\StoreProjectRequest;
 use App\Models\Project;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -33,9 +32,33 @@ class CreateProject extends Component
         }
     }
 
-    public function save(StoreProjectRequest $request): void
+    public function rules(): array
     {
-        $validated = $request->validated();
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'status' => ['required', 'in:planejamento,em_andamento,concluido,cancelado'],
+            'start_date' => ['nullable', 'date'],
+            'due_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'O nome do projeto é obrigatório.',
+            'name.max' => 'O nome do projeto não pode ter mais de 255 caracteres.',
+            'status.required' => 'O status é obrigatório.',
+            'status.in' => 'O status deve ser: planejamento, em andamento, concluído ou cancelado.',
+            'start_date.date' => 'A data de início deve ser uma data válida.',
+            'due_date.date' => 'A data de vencimento deve ser uma data válida.',
+            'due_date.after_or_equal' => 'A data de vencimento não pode ser anterior à data de início.',
+        ];
+    }
+
+    public function save(): void
+    {
+        $validated = $this->validate();
 
         if ($this->project) {
             $this->project->update($validated);
@@ -55,10 +78,6 @@ class CreateProject extends Component
 
     public function render()
     {
-        return view('projects.form', [
-            'errors' => new \Illuminate\Support\ViewErrorBag([
-                'default' => $this->getErrorBag(),
-            ]),
-        ]);
+        return view('projects.form');
     }
 }

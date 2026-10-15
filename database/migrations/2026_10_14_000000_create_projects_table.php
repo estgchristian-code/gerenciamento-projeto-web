@@ -13,7 +13,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('status')->default('active');
+            $table->string('status')->default('planejamento');
+            $table->date('start_date')->nullable();
             $table->date('due_date')->nullable();
             $table->timestamps();
         });

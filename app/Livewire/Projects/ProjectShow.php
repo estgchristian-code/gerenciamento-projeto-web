@@ -21,6 +21,7 @@ class ProjectShow extends Component
     public function render()
     {
         return view('projects.show', [
+            'statusLabel' => $this->statusLabel,
             'errors' => new \Illuminate\Support\ViewErrorBag([
                 'default' => $this->getErrorBag(),
             ]),
