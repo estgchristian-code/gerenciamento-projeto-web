@@ -4,7 +4,6 @@ namespace App\Livewire\Projects;
 
 use App\Models\Project;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -14,17 +13,21 @@ class ProjectShow extends Component
 
     public function mount(Project $project): void
     {
-        $this->authorize('view', $project);
         $this->project = $project->load(['tasks' => fn ($q) => $q->with('user')->latest()]);
+    }
+
+    public function delete(): void
+    {
+        $this->project->delete();
+
+        session()->flash('success', 'Projeto excluído com sucesso!');
+        $this->redirect(route('projects.index'));
     }
 
     public function render()
     {
         return view('projects.show', [
             'statusLabel' => $this->statusLabel,
-            'errors' => new \Illuminate\Support\ViewErrorBag([
-                'default' => $this->getErrorBag(),
-            ]),
         ]);
     }
 

@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
@@ -17,6 +17,7 @@ class Project extends Model
         'status',
         'start_date',
         'due_date',
+        'user_id',
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Project extends Model
             return 0;
         }
         $completed = $this->tasks->where('status', 'done')->count();
+
         return round(($completed / $total) * 100);
     }
 }

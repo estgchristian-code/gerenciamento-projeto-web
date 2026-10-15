@@ -5,8 +5,8 @@ namespace App\Livewire\Projects;
 use App\Models\Project;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Livewire\WithPagination;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 #[Title('Meus Projetos')]
@@ -15,44 +15,50 @@ class ProjectList extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $statusFilter = '';
 
-    public function mount(): void
+    public function updatingSearch(): void
     {
-        session()->forget('errors');
+        $this->resetPage();
     }
 
-    public function render()
+    public function updatingStatusFilter(): void
     {
-        $projects = auth()->user()
-            ->projects()
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->when($this->statusFilter, fn ($q) => $q->where('status', $this->statusFilter))
-            ->latest()
-            ->withCount('tasks')
-            ->paginate(10);
+        $this->resetPage();
+    }
 
-        $statusLabels = [
-            'planejamento' => 'Planejamento',
-            'em_andamento' => 'Em andamento',
-            'concluido' => 'Concluído',
-            'cancelado' => 'Cancelado',
-        ];
-
-        return view('projects.index', [
-            'projects' => $projects,
-            'statusLabels' => $statusLabels,
-            'errors' => new \Illuminate\Support\ViewErrorBag([
-                'default' => $this->getErrorBag(),
-            ]),
-        ]);
+    public function clearFilters(): void
+    {
+        $this->search = '';
+        $this->statusFilter = '';
+        $this->resetPage();
     }
 
     public function delete(Project $project): void
     {
-        $this->authorize('delete', $project);
         $project->delete();
-        $this->dispatch('notify', message: 'Projeto excluído com sucesso!');
+
+        session()->flash('success', 'Projeto excluído com sucesso!');
+        $this->redirect(route('projects.index'));
+    }
+
+    public function render()
+    {
+        $hasFilters = $this->search !== '' || $this->statusFilter !== '';
+
+        $projects = Project::query()
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->statusFilter, fn ($q) => $q->where('status', $this->statusFilter))
+            ->latest()
+            ->withCount('tasks')
+            ->paginate(9);
+
+        return view('projects.index', [
+            'projects' => $projects,
+            'statusLabels' => $this->statusLabels,
+            'hasFilters' => $hasFilters,
+        ]);
     }
 
     public function getStatusLabelsProperty(): array

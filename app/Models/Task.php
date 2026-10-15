@@ -43,7 +43,7 @@ class Task extends Model
         };
     }
 
-    public function getStatusLabelProperty(): string
+    public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
             'todo' => 'A fazer',

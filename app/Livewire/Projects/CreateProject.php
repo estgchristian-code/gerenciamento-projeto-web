@@ -4,17 +4,21 @@ namespace App\Livewire\Projects;
 
 use App\Models\Project;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class CreateProject extends Component
 {
     public ?Project $project = null;
+
     public string $name = '';
+
     public ?string $description = null;
+
     public string $status = 'planejamento';
+
     public ?string $start_date = null;
+
     public ?string $due_date = null;
 
     public function mount(?Project $project = null): void
@@ -22,7 +26,6 @@ class CreateProject extends Component
         session()->forget('errors');
 
         if ($project) {
-            $this->authorize('update', $project);
             $this->project = $project;
             $this->name = $project->name;
             $this->description = $project->description;
@@ -62,10 +65,10 @@ class CreateProject extends Component
 
         if ($this->project) {
             $this->project->update($validated);
-            $this->dispatch('notify', message: 'Projeto atualizado com sucesso!');
+            session()->flash('success', 'Projeto atualizado com sucesso!');
         } else {
-            auth()->user()->projects()->create($validated);
-            $this->dispatch('notify', message: 'Projeto criado com sucesso!');
+            Project::create($validated);
+            session()->flash('success', 'Projeto criado com sucesso!');
         }
 
         $this->redirect(route('projects.index'));

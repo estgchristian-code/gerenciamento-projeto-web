@@ -3,59 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Painel' }} - {{ config('app.name') }}</title>
+    <title>{{ $title ?? 'Projetos' }} - {{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="min-h-screen bg-gray-50 font-sans antialiased">
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Navegação principal">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-8">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2" aria-label="{{ config('app.name') }}">
-                        <svg class="h-8 w-8 text-gray-900" fill="currentColor" viewBox="0 0 120 120" aria-hidden="true">
-                            <path d="M60 0C26.86 0 0 26.86 0 60s26.86 60 60 60 60-26.86 60-60S93.14 0 60 0zm0 108C33.42 108 12 86.58 12 60S33.42 12 60 12s48 21.42 48 48-21.42 48-48 48z"/>
+<body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur">
+        <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Navegação principal">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('projects.index') }}" class="flex items-center gap-2.5" aria-label="{{ config('app.name') }}">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-sm">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
                         </svg>
-                        <span class="text-xl font-semibold text-gray-900 hidden sm:block">{{ config('app.name') }}</span>
+                    </span>
+                    <span class="text-base font-semibold tracking-tight text-slate-900 sm:text-lg">{{ config('app.name') }}</span>
+                </a>
+
+                <div class="ml-6 hidden items-center gap-1 md:flex">
+                    <a href="{{ route('projects.index') }}"
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.index') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Projetos
                     </a>
-
-                    <div class="hidden md:flex items-center gap-6" aria-label="Navegação principal">
-                        <a href="{{ route('dashboard') }}"
-                           class="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-150">
-                            Dashboard
-                        </a>
-                        <a href="{{ route('projects.index') }}"
-                           class="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-150">
-                            Projetos
-                        </a>
-                    </div>
+                    <a href="{{ route('projects.create') }}"
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.create') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Novo Projeto
+                    </a>
                 </div>
+            </div>
 
-                <div class="flex items-center gap-4">
-                    <div class="hidden sm:flex items-center gap-3">
-                        <span class="text-sm text-gray-700" aria-hidden="true">{{ auth()->user()->name }}</span>
-                        <form action="{{ route('logout') }}" method="POST" aria-label="Sair do sistema">
-                            @csrf
-                            <button type="submit"
-                                    class="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-1 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 rounded">
-                                Sair
-                            </button>
-                        </form>
-                    </div>
-                </div>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('projects.create') }}" class="btn-primary hidden sm:inline-flex">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Novo Projeto
+                </a>
+
+                <button type="button"
+                        class="btn-ghost md:hidden"
+                        x-data
+                        @click="$dispatch('toggle-mobile-menu')"
+                        aria-label="Abrir menu">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
             </div>
         </nav>
+
+        <div x-data="{ open: false }"
+             @toggle-mobile-menu.window="open = !open"
+             x-show="open"
+             x-cloak
+             x-transition
+             class="border-t border-slate-200 bg-white md:hidden">
+            <div class="space-y-1 px-4 py-3">
+                <a href="{{ route('projects.index') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.index') ? 'bg-slate-100 text-slate-900' : '' }}">
+                    Projetos
+                </a>
+                <a href="{{ route('projects.create') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.create') ? 'bg-slate-100 text-slate-900' : '' }}">
+                    Novo Projeto
+                </a>
+            </div>
+        </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {{ $slot }}
+    @if (session('success') || session('error'))
+        <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+            @if (session('success'))
+                <div x-data="{ show: true }"
+                     x-init="setTimeout(() => show = false, 4000)"
+                     x-show="show"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm"
+                     role="status">
+                    <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="flex-1 text-sm font-medium text-emerald-800">{{ session('success') }}</p>
+                    <button type="button" @click="show = false" class="text-emerald-600 hover:text-emerald-800" aria-label="Fechar">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            @endif
 
-        @if (isset($footer))
-            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                {{ $footer }}
-            </div>
-        @endif
+            @if (session('error'))
+                <div class="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 shadow-sm" role="alert">
+                    <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.33 16a2 2 0 001.74 3z"/>
+                    </svg>
+                    <p class="flex-1 text-sm font-medium text-rose-800">{{ session('error') }}</p>
+                </div>
+            @endif
+        </div>
+    @endif
+
+    <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {{ $slot }}
     </main>
+
+    <footer class="mx-auto max-w-7xl px-4 pb-8 pt-4 sm:px-6 lg:px-8">
+        <p class="text-center text-xs text-slate-400">
+            {{ config('app.name') }} &middot; {{ now()->year }}
+        </p>
+    </footer>
 
     @livewireScripts
 </body>
