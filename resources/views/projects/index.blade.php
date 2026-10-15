@@ -164,14 +164,8 @@
                 @else
                     <h3 class="mt-4 text-lg font-semibold text-slate-900">Nenhum projeto cadastrado</h3>
                     <p class="mt-1 max-w-sm text-sm text-slate-500">
-                        Você ainda não possui projetos. Crie o primeiro para começar a organizar o seu trabalho.
+                        Você ainda não possui projetos. Use o botão <span class="font-medium text-slate-700">Novo Projeto</span> acima para criar o primeiro.
                     </p>
-                    <a href="{{ route('projects.create') }}" class="btn-primary mt-5">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Criar primeiro projeto
-                    </a>
                 @endif
             </div>
         @endif

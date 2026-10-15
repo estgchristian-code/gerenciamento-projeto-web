@@ -22,24 +22,13 @@
 
                 <div class="ml-6 hidden items-center gap-1 md:flex">
                     <a href="{{ route('projects.index') }}"
-                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.index') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
                         Projetos
-                    </a>
-                    <a href="{{ route('projects.create') }}"
-                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.create') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                        Novo Projeto
                     </a>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('projects.create') }}" class="btn-primary hidden sm:inline-flex">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Novo Projeto
-                </a>
-
                 <button type="button"
                         class="btn-ghost md:hidden"
                         x-data
@@ -60,12 +49,8 @@
              class="border-t border-slate-200 bg-white md:hidden">
             <div class="space-y-1 px-4 py-3">
                 <a href="{{ route('projects.index') }}"
-                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.index') ? 'bg-slate-100 text-slate-900' : '' }}">
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : '' }}">
                     Projetos
-                </a>
-                <a href="{{ route('projects.create') }}"
-                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.create') ? 'bg-slate-100 text-slate-900' : '' }}">
-                    Novo Projeto
                 </a>
             </div>
         </div>
