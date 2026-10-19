@@ -61,6 +61,9 @@ class CreateProject extends Component
 
     public function save(): void
     {
+        $this->start_date = $this->start_date ?: null;
+        $this->due_date = $this->due_date ?: null;
+
         $validated = $this->validate();
 
         if ($this->project) {

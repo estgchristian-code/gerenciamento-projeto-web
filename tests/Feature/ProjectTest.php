@@ -99,6 +99,41 @@ class ProjectTest extends TestCase
             ->assertHasErrors(['due_date' => 'after_or_equal']);
     }
 
+    public function test_project_can_be_created_without_dates(): void
+    {
+        Livewire::test(CreateProject::class)
+            ->set('name', 'Projeto sem datas')
+            ->set('status', 'planejamento')
+            ->set('start_date', '')
+            ->set('due_date', '')
+            ->call('save')
+            ->assertRedirect(route('projects.index'));
+
+        $project = Project::where('name', 'Projeto sem datas')->firstOrFail();
+
+        $this->assertNull($project->start_date);
+        $this->assertNull($project->due_date);
+    }
+
+    public function test_clearing_project_dates_sets_them_to_null(): void
+    {
+        $project = Project::factory()->create([
+            'start_date' => '2026-01-01',
+            'due_date' => '2026-02-01',
+        ]);
+
+        Livewire::test(CreateProject::class, ['project' => $project])
+            ->set('start_date', '')
+            ->set('due_date', '')
+            ->call('save')
+            ->assertRedirect(route('projects.index'));
+
+        $project->refresh();
+
+        $this->assertNull($project->start_date);
+        $this->assertNull($project->due_date);
+    }
+
     public function test_guest_can_view_project(): void
     {
         $project = Project::factory()->create([
