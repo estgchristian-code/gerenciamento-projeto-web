@@ -100,11 +100,17 @@
     </div>
 
     <div class="card overflow-hidden">
-        <div class="flex flex-col gap-2 border-b border-slate-100 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-lg font-semibold text-slate-900">Tarefas do Projeto</h2>
                 <p class="mt-0.5 text-sm text-slate-500">{{ $project->tasks->count() }} {{ $project->tasks->count() === 1 ? 'tarefa' : 'tarefas' }} neste projeto</p>
             </div>
+            <a href="{{ route('tasks.create', ['project' => $project->id]) }}" class="btn-primary self-start sm:self-auto">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Nova Tarefa
+            </a>
         </div>
 
         @if ($project->tasks->isNotEmpty())
@@ -113,7 +119,7 @@
                     <li class="p-4 transition-colors hover:bg-slate-50 sm:px-6">
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div class="min-w-0 flex-1">
-                                <h3 class="truncate text-base font-medium text-slate-900">{{ $task->title }}</h3>
+                                <a href="{{ route('tasks.show', $task) }}" class="truncate text-base font-medium text-slate-900 hover:text-indigo-600">{{ $task->title }}</a>
                                 @if ($task->description)
                                     <p class="mt-1 line-clamp-2 text-sm text-slate-600">{{ $task->description }}</p>
                                 @endif
@@ -142,7 +148,7 @@
                     </svg>
                 </span>
                 <h3 class="mt-4 text-lg font-semibold text-slate-900">Nenhuma tarefa cadastrada</h3>
-                <p class="mt-1 max-w-sm text-sm text-slate-500">Este projeto ainda não possui tarefas. O gerenciamento de tarefas está previsto para uma próxima etapa.</p>
+                <p class="mt-1 max-w-sm text-sm text-slate-500">Este projeto ainda não possui tarefas. Use o botão <span class="font-medium text-slate-700">Nova Tarefa</span> acima para adicionar a primeira.</p>
             </div>
         @endif
     </div>

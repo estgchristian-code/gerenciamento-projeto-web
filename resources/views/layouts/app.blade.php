@@ -25,6 +25,10 @@
                        class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
                         Projetos
                     </a>
+                    <a href="{{ route('tasks.index') }}"
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('tasks.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Tarefas
+                    </a>
                 </div>
             </div>
 
@@ -51,6 +55,10 @@
                 <a href="{{ route('projects.index') }}"
                    class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : '' }}">
                     Projetos
+                </a>
+                <a href="{{ route('tasks.index') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('tasks.*') ? 'bg-slate-100 text-slate-900' : '' }}">
+                    Tarefas
                 </a>
             </div>
         </div>

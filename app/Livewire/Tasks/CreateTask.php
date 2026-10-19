@@ -2,75 +2,106 @@
 
 namespace App\Livewire\Tasks;
 
-use App\Http\Requests\StoreTaskRequest;
 use App\Models\Project;
 use App\Models\Task;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Title('Nova Tarefa')]
 class CreateTask extends Component
 {
     public ?Task $task = null;
-    public ?Project $project = null;
-    public string $title = '';
-    public ?string $description = null;
-    public string $status = 'todo';
-    public string $priority = 'medium';
-    public $due_date = null;
-    public $user_id = null;
 
-    public function mount(?Project $project = null, ?Task $task = null): void
+    public ?int $project_id = null;
+
+    public string $title = '';
+
+    public ?string $description = null;
+
+    public string $status = Task::STATUS_TODO;
+
+    public string $priority = Task::PRIORITY_MEDIUM;
+
+    public ?string $due_date = null;
+
+    public ?int $user_id = null;
+
+    public function mount(?Task $task = null, ?int $project = null): void
     {
         session()->forget('errors');
 
         if ($task) {
             $this->task = $task;
-            $this->project = $task->project;
+            $this->project_id = $task->project_id;
             $this->title = $task->title;
             $this->description = $task->description;
             $this->status = $task->status;
             $this->priority = $task->priority;
             $this->due_date = $task->due_date?->format('Y-m-d');
             $this->user_id = $task->user_id;
-        } else {
-            $this->project = $project;
+
+            return;
+        }
+
+        if ($project) {
+            $this->project_id = $project;
         }
     }
 
-    public function save(StoreTaskRequest $request): void
+    /**
+     * @return array<string, array<int, mixed>>
+     */
+    public function rules(): array
     {
-        $validated = $request->validated();
+        return (new Task)->rules();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'project_id.required' => 'Selecione o projeto da tarefa.',
+            'project_id.integer' => 'O projeto selecionado é inválido.',
+            'project_id.exists' => 'O projeto selecionado é inválido.',
+            'title.required' => 'O título da tarefa é obrigatório.',
+            'title.max' => 'O título da tarefa não pode ter mais de 255 caracteres.',
+            'status.required' => 'O status é obrigatório.',
+            'status.in' => 'O status selecionado é inválido.',
+            'priority.required' => 'A prioridade é obrigatória.',
+            'priority.in' => 'A prioridade selecionada é inválida.',
+            'due_date.date' => 'O prazo deve ser uma data válida.',
+            'user_id.exists' => 'O responsável selecionado é inválido.',
+        ];
+    }
+
+    public function save(): void
+    {
+        $validated = $this->validate();
 
         if ($this->task) {
             $this->task->update($validated);
-            $this->dispatch('taskUpdated');
+            session()->flash('success', 'Tarefa atualizada com sucesso!');
         } else {
-            $this->project->tasks()->create($validated);
-            $this->dispatch('taskCreated');
+            Task::create($validated);
+            session()->flash('success', 'Tarefa criada com sucesso!');
         }
 
-        $this->dispatch('notify', message: $this->task ? 'Tarefa atualizada com sucesso!' : 'Tarefa criada com sucesso!');
-        $this->redirect(route('projects.show', $this->project));
+        $this->redirect(route('tasks.index'));
     }
 
     public function cancel(): void
     {
-        $this->redirect(route('projects.show', $this->project));
+        $this->redirect(route('tasks.index'));
     }
 
     public function render()
     {
-        $projectMembers = $this->project ? $this->project->user->loadMissing('projects') : null;
-
         return view('tasks.form', [
-            'project' => $this->project,
-            'errors' => new \Illuminate\Support\ViewErrorBag([
-                'default' => $this->getErrorBag(),
-            ]),
+            'projects' => Project::orderBy('name')->get(['id', 'name']),
+            'statusLabels' => Task::statusLabels(),
+            'priorityLabels' => Task::priorityLabels(),
         ]);
     }
 }
