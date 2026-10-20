@@ -2,7 +2,7 @@
 
 <div class="mx-auto max-w-3xl space-y-6">
     <nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Navegação">
-        <a href="{{ route('projects.index') }}" class="hover:text-slate-900">Projetos</a>
+        <a href="{{ route('projects.index') }}" class="hover:text-indigo-600">Projetos</a>
         <svg class="h-4 w-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
@@ -10,7 +10,7 @@
     </nav>
 
     <div>
-        <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{{ $project ? 'Editar Projeto' : 'Novo Projeto' }}</h1>
+        <h1 class="bg-gradient-to-r from-blue-800 via-indigo-700 to-violet-700 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">{{ $project ? 'Editar Projeto' : 'Novo Projeto' }}</h1>
         <p class="mt-1 text-sm text-slate-500">
             {{ $project ? 'Atualize as informações do projeto abaixo.' : 'Preencha os dados para criar um novo projeto.' }}
         </p>
@@ -19,7 +19,7 @@
     <div class="card p-6 sm:p-8">
         <form wire:submit="save" class="space-y-6" novalidate>
             @if ($errors->any())
-                <div class="rounded-xl border border-rose-200 bg-rose-50 p-4" role="alert">
+                <div class="rounded-xl border border-rose-200/80 bg-gradient-to-r from-rose-50 to-red-50 p-4 shadow-sm shadow-rose-600/10" role="alert">
                     <div class="flex gap-3">
                         <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.33 16a2 2 0 001.74 3z"/>

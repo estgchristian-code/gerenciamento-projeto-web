@@ -2,9 +2,9 @@
 <x-slot name="subtitle">Crie sua conta para começar</x-slot>
 
 <x-slot name="footer">
-    <p class="text-sm text-gray-600">
+    <p class="text-sm text-slate-600">
         Já tem uma conta?
-        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-violet-600">
             Entrar
         </a>
     </p>
@@ -12,11 +12,11 @@
 
 <form wire:submit="register" class="space-y-6">
     @if ($errors->any())
-        <div class="rounded-md bg-red-50 p-4" role="alert">
+        <div class="rounded-md bg-gradient-to-r from-rose-50 to-red-50 p-4 shadow-sm shadow-rose-600/10 ring-1 ring-inset ring-rose-200/80" role="alert">
             <div class="flex">
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Erro ao tentar cadastrar</h3>
-                    <div class="mt-2 text-sm text-red-700">
+                    <h3 class="text-sm font-medium text-rose-800">Erro ao tentar cadastrar</h3>
+                    <div class="mt-2 text-sm text-rose-700">
                         <ul class="list-disc space-y-1 pl-5">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -37,11 +37,11 @@
             wire:model.defer="name"
             required
             autocomplete="name"
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm @error('name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-indigo-500/30 focus:border-indigo-500 focus:z-10 sm:text-sm @error('name') border-rose-300 text-rose-900 placeholder-rose-300 focus:border-rose-500 focus:ring-rose-500/30 @enderror"
             placeholder="Nome"
         >
         @error('name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
         @enderror
     </div>
 
@@ -54,11 +54,11 @@
             wire:model.defer="email"
             required
             autocomplete="email"
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm @error('email') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-indigo-500/30 focus:border-indigo-500 focus:z-10 sm:text-sm @error('email') border-rose-300 text-rose-900 placeholder-rose-300 focus:border-rose-500 focus:ring-rose-500/30 @enderror"
             placeholder="E-mail"
         >
         @error('email')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
         @enderror
     </div>
 
@@ -71,11 +71,11 @@
             wire:model.defer="password"
             required
             autocomplete="new-password"
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm @error('password') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-indigo-500/30 focus:border-indigo-500 focus:z-10 sm:text-sm @error('password') border-rose-300 text-rose-900 placeholder-rose-300 focus:border-rose-500 focus:ring-rose-500/30 @enderror"
             placeholder="Senha (mínimo 8 caracteres)"
         >
         @error('password')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
         @enderror
     </div>
 
@@ -88,18 +88,18 @@
             wire:model.defer="password_confirmation"
             required
             autocomplete="new-password"
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm @error('password_confirmation') border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500 @enderror"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-indigo-500/30 focus:border-indigo-500 focus:z-10 sm:text-sm @error('password_confirmation') border-rose-300 text-rose-900 placeholder-rose-300 focus:border-rose-500 focus:ring-rose-500/30 @enderror"
             placeholder="Confirmar senha"
         >
         @error('password_confirmation')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
         @enderror
     </div>
 
     <div>
         <button
             type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-600 shadow-md shadow-indigo-600/25 hover:from-blue-800 hover:via-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             wire:loading.attr="disabled"
         >
             <span wire:loading.remove>Cadastrar</span>

@@ -7,12 +7,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
-    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur">
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/70 font-sans text-slate-900 antialiased">
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/85 shadow-sm shadow-indigo-950/5 backdrop-blur">
         <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Navegação principal">
             <div class="flex items-center gap-3">
                 <a href="{{ route('projects.index') }}" class="flex items-center gap-2.5" aria-label="{{ config('app.name') }}">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-sm">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/30">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
                         </svg>
@@ -22,11 +22,11 @@
 
                 <div class="ml-6 hidden items-center gap-1 md:flex">
                     <a href="{{ route('projects.index') }}"
-                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('projects.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-700' }}">
                         Projetos
                     </a>
                     <a href="{{ route('tasks.index') }}"
-                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('tasks.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                       class="rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('tasks.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-700' }}">
                         Tarefas
                     </a>
                 </div>
@@ -50,14 +50,14 @@
              x-show="open"
              x-cloak
              x-transition
-             class="border-t border-slate-200 bg-white md:hidden">
+             class="border-t border-slate-200/80 bg-white md:hidden">
             <div class="space-y-1 px-4 py-3">
                 <a href="{{ route('projects.index') }}"
-                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('projects.*') ? 'bg-slate-100 text-slate-900' : '' }}">
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 {{ request()->routeIs('projects.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
                     Projetos
                 </a>
                 <a href="{{ route('tasks.index') }}"
-                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 {{ request()->routeIs('tasks.*') ? 'bg-slate-100 text-slate-900' : '' }}">
+                   class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 {{ request()->routeIs('tasks.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
                     Tarefas
                 </a>
             </div>
@@ -73,7 +73,7 @@
                      x-transition:leave="transition ease-in duration-200"
                      x-transition:leave-start="opacity-100"
                      x-transition:leave-end="opacity-0"
-                     class="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm"
+                     class="flex items-start gap-3 rounded-xl border border-emerald-200/80 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 shadow-sm shadow-emerald-600/10"
                      role="status">
                     <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -88,7 +88,7 @@
             @endif
 
             @if (session('error'))
-                <div class="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 shadow-sm" role="alert">
+                <div class="flex items-start gap-3 rounded-xl border border-rose-200/80 bg-gradient-to-r from-rose-50 to-red-50 p-4 shadow-sm shadow-rose-600/10" role="alert">
                     <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.33 16a2 2 0 001.74 3z"/>
                     </svg>
