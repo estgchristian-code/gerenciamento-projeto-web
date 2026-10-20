@@ -103,7 +103,7 @@
     </main>
 
     <footer class="mx-auto max-w-7xl px-4 pb-8 pt-4 sm:px-6 lg:px-8">
-        <p class="text-center text-xs text-slate-400">
+        <p class="text-center text-xs text-slate-500">
             {{ config('app.name') }} &middot; {{ now()->year }}
         </p>
     </footer>

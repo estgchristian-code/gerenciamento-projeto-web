@@ -51,7 +51,7 @@
                 </select>
             </div>
 
-            <div>
+            <div class="sm:col-span-2 xl:col-span-1">
                 <label for="project-filter" class="sr-only">Filtrar por projeto</label>
                 <select id="project-filter" wire:model.live="projectFilter" class="input">
                     <option value="">Todos os projetos</option>
@@ -62,18 +62,18 @@
             </div>
         </div>
 
-        <div class="mt-3 flex items-center justify-between gap-2">
-            <span wire:loading.inline-flex wire:target="search,statusFilter,priorityFilter,projectFilter" class="items-center gap-2 text-sm text-slate-500">
-                <svg class="h-4 w-4 animate-spin text-indigo-600" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                </svg>
-                Filtrando...
-            </span>
-            @if ($hasFilters)
+        @if ($hasFilters)
+            <div class="mt-3 flex items-center justify-between gap-2">
+                <span wire:loading.inline-flex wire:target="search,statusFilter,priorityFilter,projectFilter" class="items-center gap-2 text-sm text-slate-500">
+                    <svg class="h-4 w-4 animate-spin text-indigo-600" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    Filtrando...
+                </span>
                 <button type="button" wire:click="clearFilters" class="btn-ghost ml-auto whitespace-nowrap">Limpar filtros</button>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 
     <div class="relative">
@@ -130,13 +130,16 @@
                                 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span class="text-slate-400">Prioridade</span>
+                                <svg class="h-4 w-4 text-indigo-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 21V4m0 0h12l-2 4 2 4H4"/>
+                                </svg>
+                                <span class="text-slate-500">Prioridade</span>
                                 <x-priority-badge :priority="$task->priority" :label="$task->priorityLabel" />
                             </div>
                         </dl>
 
-                        <div class="mt-5 flex items-center justify-between gap-2 border-t border-slate-100 pt-4">
-                            <a href="{{ route('tasks.show', $task) }}" class="btn-secondary px-3 py-2">
+                        <div class="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+                            <a href="{{ route('tasks.show', $task) }}" class="btn-secondary whitespace-nowrap px-3 py-2">
                                 Ver detalhes
                             </a>
                             <div class="flex items-center gap-1">
@@ -163,7 +166,7 @@
 
             @if ($tasks->hasPages())
                 <div class="mt-6">
-                    {{ $tasks->links() }}
+                    {{ $tasks->links('pagination.custom') }}
                 </div>
             @endif
         @else

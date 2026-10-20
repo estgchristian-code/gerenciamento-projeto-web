@@ -117,8 +117,8 @@
                             </div>
                         </dl>
 
-                        <div class="mt-5 flex items-center justify-between gap-2 border-t border-slate-100 pt-4">
-                            <a href="{{ route('projects.show', $project) }}" class="btn-secondary px-3 py-2">
+                        <div class="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+                            <a href="{{ route('projects.show', $project) }}" class="btn-secondary whitespace-nowrap px-3 py-2">
                                 Ver detalhes
                             </a>
                             <div class="flex items-center gap-1">
@@ -145,7 +145,7 @@
 
             @if ($projects->hasPages())
                 <div class="mt-6">
-                    {{ $projects->links() }}
+                    {{ $projects->links('pagination.custom') }}
                 </div>
             @endif
         @else
