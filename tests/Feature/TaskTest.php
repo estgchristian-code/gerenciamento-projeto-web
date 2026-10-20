@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use Livewire\Exceptions\PublicPropertyNotFoundException;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -105,11 +106,9 @@ class TaskTest extends TestCase
     public function test_validation_rules_accept_valid_task_data(): void
     {
         $project = Project::factory()->create();
-        $user = User::factory()->create();
 
         $validator = Validator::make([
             'project_id' => $project->id,
-            'user_id' => $user->id,
             'title' => 'Tarefa válida',
             'description' => 'Descrição da tarefa.',
             'status' => Task::STATUS_IN_PROGRESS,
@@ -221,6 +220,85 @@ class TaskTest extends TestCase
             'status' => Task::STATUS_IN_PROGRESS,
             'priority' => Task::PRIORITY_HIGH,
         ]);
+
+        $this->assertNull(Task::where('title', 'Nova Tarefa Teste')->firstOrFail()->user_id);
+    }
+
+    public function test_task_description_cannot_exceed_ten_thousand_characters(): void
+    {
+        $project = Project::factory()->create();
+
+        Livewire::test(CreateTask::class)
+            ->set('project_id', $project->id)
+            ->set('title', 'Tarefa com descrição longa')
+            ->set('description', str_repeat('a', 10001))
+            ->call('save')
+            ->assertHasErrors(['description' => 'max']);
+
+        $this->assertDatabaseCount('tasks', 0);
+    }
+
+    public function test_task_accepts_description_with_ten_thousand_characters(): void
+    {
+        $project = Project::factory()->create();
+        $description = str_repeat('a', 10000);
+
+        Livewire::test(CreateTask::class)
+            ->set('project_id', $project->id)
+            ->set('title', 'Tarefa com descrição no limite')
+            ->set('description', $description)
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('tasks.index'));
+
+        $this->assertDatabaseHas('tasks', [
+            'project_id' => $project->id,
+            'description' => $description,
+        ]);
+    }
+
+    public function test_client_cannot_set_user_id_on_task_creation(): void
+    {
+        $user = User::factory()->create();
+
+        $this->expectException(PublicPropertyNotFoundException::class);
+
+        Livewire::test(CreateTask::class)
+            ->set('user_id', $user->id);
+    }
+
+    public function test_client_cannot_change_user_id_on_task_edit(): void
+    {
+        $task = Task::factory()->create([
+            'user_id' => User::factory()->create()->id,
+        ]);
+
+        $this->expectException(PublicPropertyNotFoundException::class);
+
+        Livewire::test(CreateTask::class, ['task' => $task])
+            ->set('user_id', User::factory()->create()->id);
+    }
+
+    public function test_user_id_is_not_part_of_task_validation_rules(): void
+    {
+        $this->assertArrayNotHasKey('user_id', (new Task)->rules());
+    }
+
+    public function test_existing_task_user_id_is_preserved_when_updating(): void
+    {
+        $user = User::factory()->create();
+        $task = Task::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Tarefa Original',
+        ]);
+
+        Livewire::test(CreateTask::class, ['task' => $task])
+            ->set('title', 'Tarefa Atualizada')
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('tasks.index'));
+
+        $this->assertSame($user->id, $task->fresh()->user_id);
     }
 
     public function test_task_creation_requires_a_project(): void
@@ -293,6 +371,21 @@ class TaskTest extends TestCase
         $this->assertSame(Task::STATUS_DONE, $task->status);
         $this->assertSame(Task::PRIORITY_LOW, $task->priority);
         $this->assertDatabaseCount('tasks', 1);
+    }
+
+    public function test_clearing_task_due_date_sets_it_to_null(): void
+    {
+        $task = Task::factory()->create([
+            'due_date' => '2026-12-31',
+        ]);
+
+        Livewire::test(CreateTask::class, ['task' => $task])
+            ->set('due_date', '')
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('tasks.index'));
+
+        $this->assertNull($task->fresh()->due_date);
     }
 
     public function test_guest_can_delete_a_task_from_the_list(): void

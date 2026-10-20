@@ -84,11 +84,10 @@ class Task extends Model
         return [
             'project_id' => ['required', 'integer', 'exists:projects,id'],
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:10000'],
             'status' => ['required', 'string', Rule::in(self::STATUSES)],
             'priority' => ['required', 'string', Rule::in(self::PRIORITIES)],
             'due_date' => ['nullable', 'date'],
-            'user_id' => ['nullable', 'integer', 'exists:users,id'],
         ];
     }
 

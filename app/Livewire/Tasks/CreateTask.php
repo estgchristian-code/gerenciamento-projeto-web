@@ -24,8 +24,6 @@ class CreateTask extends Component
 
     public ?string $due_date = null;
 
-    public ?int $user_id = null;
-
     public function mount(?Task $task = null, ?int $project = null): void
     {
         session()->forget('errors');
@@ -38,7 +36,6 @@ class CreateTask extends Component
             $this->status = $task->status;
             $this->priority = $task->priority;
             $this->due_date = $task->due_date?->format('Y-m-d');
-            $this->user_id = $task->user_id;
 
             return;
         }
@@ -67,17 +64,19 @@ class CreateTask extends Component
             'project_id.exists' => 'O projeto selecionado é inválido.',
             'title.required' => 'O título da tarefa é obrigatório.',
             'title.max' => 'O título da tarefa não pode ter mais de 255 caracteres.',
+            'description.max' => 'A descrição da tarefa não pode ter mais de 10.000 caracteres.',
             'status.required' => 'O status é obrigatório.',
             'status.in' => 'O status selecionado é inválido.',
             'priority.required' => 'A prioridade é obrigatória.',
             'priority.in' => 'A prioridade selecionada é inválida.',
             'due_date.date' => 'O prazo deve ser uma data válida.',
-            'user_id.exists' => 'O responsável selecionado é inválido.',
         ];
     }
 
     public function save(): void
     {
+        $this->due_date = $this->due_date ?: null;
+
         $validated = $this->validate();
 
         if ($this->task) {

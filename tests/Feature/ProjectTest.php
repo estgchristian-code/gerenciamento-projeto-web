@@ -61,6 +61,36 @@ class ProjectTest extends TestCase
         ]);
     }
 
+    public function test_project_description_cannot_exceed_ten_thousand_characters(): void
+    {
+        Livewire::test(CreateProject::class)
+            ->set('name', 'Projeto com descrição longa')
+            ->set('description', str_repeat('a', 10001))
+            ->set('status', 'planejamento')
+            ->call('save')
+            ->assertHasErrors(['description' => 'max']);
+
+        $this->assertDatabaseCount('projects', 0);
+    }
+
+    public function test_project_accepts_description_with_ten_thousand_characters(): void
+    {
+        $description = str_repeat('a', 10000);
+
+        Livewire::test(CreateProject::class)
+            ->set('name', 'Projeto com descrição no limite')
+            ->set('description', $description)
+            ->set('status', 'planejamento')
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('projects.index'));
+
+        $this->assertDatabaseHas('projects', [
+            'name' => 'Projeto com descrição no limite',
+            'description' => $description,
+        ]);
+    }
+
     public function test_project_creation_requires_name(): void
     {
         Livewire::test(CreateProject::class)
