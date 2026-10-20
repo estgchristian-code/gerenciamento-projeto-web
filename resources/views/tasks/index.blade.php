@@ -94,13 +94,13 @@
                     <article class="card flex flex-col p-5 transition-shadow duration-150 hover:border-indigo-200/80 hover:shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_48px_-24px_rgba(79,70,229,0.45)]">
                         <div class="flex items-start justify-between gap-3">
                             <a href="{{ route('tasks.show', $task) }}"
-                               class="line-clamp-2 text-base font-semibold text-slate-900 hover:text-indigo-600">
+                               class="line-clamp-2 break-words text-base font-semibold text-slate-900 hover:text-indigo-600">
                                 {{ $task->title }}
                             </a>
                             <x-status-badge :status="$task->status" :label="$task->statusLabel" class="flex-shrink-0" />
                         </div>
 
-                        <p class="mt-2 line-clamp-2 flex-1 text-sm text-slate-600">
+                        <p class="mt-2 line-clamp-2 flex-1 break-words text-sm text-slate-600">
                             {{ $task->description ?: 'Sem descrição informada.' }}
                         </p>
 

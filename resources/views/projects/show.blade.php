@@ -13,7 +13,7 @@
         <div class="bg-gradient-to-br from-blue-700 via-indigo-600 to-violet-600 px-6 py-6 sm:px-8">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="min-w-0">
-                    <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">{{ $project->name }}</h1>
+                    <h1 class="text-2xl font-bold tracking-tight text-white break-words sm:text-3xl">{{ $project->name }}</h1>
                     <div class="mt-3 flex flex-wrap items-center gap-2">
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white ring-1 ring-inset ring-white/30 backdrop-blur">
                             <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
@@ -48,7 +48,7 @@
             @if ($project->description)
                 <div>
                     <h2 class="text-sm font-medium text-slate-500">Descrição</h2>
-                    <p class="mt-2 whitespace-pre-wrap text-slate-800">{{ $project->description }}</p>
+                    <p class="mt-2 whitespace-pre-wrap break-words text-slate-800">{{ $project->description }}</p>
                 </div>
             @else
                 <p class="text-sm italic text-slate-400">Nenhuma descrição informada para este projeto.</p>
@@ -119,9 +119,9 @@
                     <li class="p-4 transition-colors hover:bg-indigo-50/50 sm:px-6">
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div class="min-w-0 flex-1">
-                                <a href="{{ route('tasks.show', $task) }}" class="truncate text-base font-medium text-slate-900 hover:text-indigo-600">{{ $task->title }}</a>
+                                <a href="{{ route('tasks.show', $task) }}" class="block truncate text-base font-medium text-slate-900 hover:text-indigo-600">{{ $task->title }}</a>
                                 @if ($task->description)
-                                    <p class="mt-1 line-clamp-2 text-sm text-slate-600">{{ $task->description }}</p>
+                                    <p class="mt-1 line-clamp-2 break-words text-sm text-slate-600">{{ $task->description }}</p>
                                 @endif
                                 <div class="mt-2 flex flex-wrap items-center gap-2">
                                     <x-status-badge :status="$task->status" :label="$task->statusLabel" />

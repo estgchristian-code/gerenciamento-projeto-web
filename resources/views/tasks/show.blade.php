@@ -13,14 +13,14 @@
         <div class="bg-gradient-to-br from-blue-700 via-indigo-600 to-violet-600 px-6 py-6 sm:px-8">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="min-w-0">
-                    <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">{{ $task->title }}</h1>
+                    <h1 class="text-2xl font-bold tracking-tight text-white break-words sm:text-3xl">{{ $task->title }}</h1>
                     <div class="mt-3 flex flex-wrap items-center gap-2">
                         <x-status-badge :status="$task->status" :label="$statusLabel" class="bg-white/20 text-white ring-white/30 backdrop-blur" />
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white ring-1 ring-inset ring-white/30 backdrop-blur">
                             {{ $priorityLabel }}
                         </span>
                         @if ($task->project)
-                            <a href="{{ route('projects.show', $task->project) }}" class="text-xs text-white/80 underline-offset-2 hover:underline">
+                            <a href="{{ route('projects.show', $task->project) }}" class="min-w-0 break-words text-xs text-white/80 underline-offset-2 hover:underline">
                                 {{ $task->project->name }}
                             </a>
                         @endif
@@ -52,7 +52,7 @@
             @if ($task->description)
                 <div>
                     <h2 class="text-sm font-medium text-slate-500">Descrição</h2>
-                    <p class="mt-2 whitespace-pre-wrap text-slate-800">{{ $task->description }}</p>
+                    <p class="mt-2 whitespace-pre-wrap break-words text-slate-800">{{ $task->description }}</p>
                 </div>
             @else
                 <p class="text-sm italic text-slate-400">Nenhuma descrição informada para esta tarefa.</p>
@@ -84,7 +84,7 @@
                     <dt class="text-sm font-medium text-slate-500">Projeto</dt>
                     <dd class="mt-1.5 text-sm">
                         @if ($task->project)
-                            <a href="{{ route('projects.show', $task->project) }}" class="font-medium text-indigo-600 hover:text-violet-600">
+                            <a href="{{ route('projects.show', $task->project) }}" class="break-words font-medium text-indigo-600 hover:text-violet-600">
                                 {{ $task->project->name }}
                             </a>
                         @else
